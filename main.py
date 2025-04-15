@@ -5,8 +5,7 @@ import os
 
 # === إعداد التوكن ورابط السيرفر ===
 TOKEN = "8086056766:AAHts4apA7AUx4MatyTQfQnCLoYBOgWvHdA"
-WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://click-telegram-bot.onrender.com{WEBHOOK_PATH}"  # رابط المشروع على Render
+WEBHOOK_URL = f"https://click-telegram-bot.onrender.com/{TOKEN}"
 
 # === إعداد السجل ===
 logging.basicConfig(
@@ -14,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# === الأوامر ===
+# === أوامر البوت ===
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"أهلًا {update.effective_user.first_name}! 👋\nمرحبًا بك في لعبة BAHI BOTS ⚙️")
 
@@ -32,14 +31,14 @@ async def main():
     # تسجيل Webhook
     await app.bot.set_webhook(url=WEBHOOK_URL)
 
-    # تشغيل الخادم
+    # تشغيل الخادم بدون webhook_path
     await app.run_webhook(
         listen="0.0.0.0",
         port=int(os.environ.get("PORT", 10000)),
-        webhook_path=WEBHOOK_PATH,
         allowed_updates=Update.ALL_TYPES,
     )
 
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
+
