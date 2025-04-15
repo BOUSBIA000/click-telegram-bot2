@@ -3,12 +3,12 @@ import os
 from flask import Flask, request
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+import asyncio
 
 TOKEN = "8086056766:AAHts4apA7AUx4MatyTQfQnCLoYBOgWvHdA"
-URL = os.getenv("https://click-telegram-bot.onrender.com/")  # رابط الدومين من Render
+URL = os.getenv("WEBHOOK_URL")  # نتركه فاضي بالبداية
 
 user_data = {}
-
 app = Flask(__name__)
 
 telegram_app = Application.builder().token(TOKEN).build()
@@ -52,11 +52,20 @@ def webhook():
 
 @app.route("/")
 def home():
+    global URL
+    if not URL:
+        # توليد رابط السيرفر من زيارة أولى
+        URL = request.host_url[:-1]  # حذف "/"
+        print("تم ضبط WEBHOOK URL:", URL)
+        asyncio.run(set_webhook())
     return "بوتك شغال 💪"
+
+async def set_webhook():
+    await telegram_app.bot.set_webhook(url=f"{URL}/{TOKEN}")
 
 if __name__ == "__main__":
     telegram_app.run_webhook(
         listen="0.0.0.0",
         port=int(os.environ.get("PORT", 5000)),
-        webhook_url=f"{URL}/{TOKEN}"
+        webhook_url=f"{URL}/{TOKEN}" if URL else None
     )
