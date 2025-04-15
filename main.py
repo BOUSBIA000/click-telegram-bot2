@@ -5,7 +5,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 TOKEN = "8086056766:AAHts4apA7AUx4MatyTQfQnCLoYBOgWvHdA"
-URL = os.getenv("WEBHOOK_URL")  # رابط الدومين من Render
+URL = os.getenv("https://click-telegram-bot.onrender.com/")  # رابط الدومين من Render
 
 user_data = {}
 
